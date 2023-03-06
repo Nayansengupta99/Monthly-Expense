@@ -40,12 +40,8 @@ public class ExpenseService {
 
 	public String saveExpense(ExpenseModel model) {
 		model.setId(generateSequence(ExpenseModel.SEQUENCE_NAME));
-//		Instant now=Instant.now();
-//		model.setPurchaseDate(now);
-//		model.setId(model.getId());
-//		model.setOrderId(model.getOrderId());
-//		model.setOrderName(model.getOrderName());
-		System.out.println(model);
+		Instant now=Instant.now();
+		model.setPurchaseDate(now);
 		expRepo.save(model);
 		return "Expense Model Saved Successfully";
 	}
