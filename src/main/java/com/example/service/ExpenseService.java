@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import com.example.exception.ExpenseNotFoundException;
 import com.example.model.DatabaseSequence;
 import com.example.model.ExpenseModel;
 import com.example.repository.ExpenseRepository;
@@ -40,10 +41,47 @@ public class ExpenseService {
 
 	public String saveExpense(ExpenseModel model) {
 		model.setId(generateSequence(ExpenseModel.SEQUENCE_NAME));
-		Instant now=Instant.now();
+		Instant now = Instant.now();
 		model.setPurchaseDate(now);
+		model.setToBePaid(false);
 		expRepo.save(model);
 		return "Expense Model Saved Successfully";
+	}
+
+	public ExpenseModel updateExpenseById(Long id, ExpenseModel model) {
+
+		if (expRepo.findById(id).isPresent()) {
+			if (model != null) {
+				model.setOrderName(model.getOrderName());
+				model.setPurchaseDate(model.getPurchaseDate());
+				model.setToBePaid(model.isToBePaid());
+
+			}
+			return expRepo.save(model);
+
+		} else {
+			throw new ExpenseNotFoundException();
+		}
+
+	}
+
+	public ExpenseModel getExpenseById(long id) {
+		if (expRepo.findById(id).isPresent()) {
+			return expRepo.findById(id).get();
+		}
+
+		else {
+			throw new ExpenseNotFoundException();
+		}
+	}
+
+	public String deleteExpenseById(long id) {
+
+		if (expRepo.findById(id).isPresent()) {
+			expRepo.deleteById(id);
+			return "Deletion successfull for orderId " + id;
+		} else
+			throw new ExpenseNotFoundException();
 	}
 
 }
