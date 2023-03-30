@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 public class DatabaseSequence {
 	@Id
-    private String id;
+	private String id;
 
-    private long seq;
+	private long seq;
 }
